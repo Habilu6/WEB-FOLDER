@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | HABILU</title>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDGPnRivXIuM4mWuD0e15hT8C2wmL67UZA",
+            authDomain: "money-dashboard-20fe9.firebaseapp.com",
+            projectId: "money-dashboard-20fe9",
+            storageBucket: "money-dashboard-20fe9.appspot.com",
+            messagingSenderId: "100351912935",
+            appId: "1:100351912935:web:12894e122251248aad2b42"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Redirect user if already logged in
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                console.log("✅ User already logged in:", user.uid);
+                window.location.href = "dashboard.html";
+            }
+        });
+
+        // Handle login
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById("loginForm").addEventListener("submit", async function (event) {
+                event.preventDefault();
+
+                const email = document.getElementById("email").value;
+                const password = document.getElementById("password").value;
+                const errorMessage = document.getElementById("error-message");
+
+                try {
+                    // Login user
+                    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                    const user = userCredential.user;
+                    console.log("✅ User signed in:", user.uid);
+
+                    // Fetch user balance
+                    const userDoc = await getDoc(doc(db, "users", user.uid));
+
+                    if (userDoc.exists()) {
+                        let balance = userDoc.data().balance;
+                        localStorage.setItem("userBalance", balance);
+                        console.log("💰 Balance fetched:", balance);
+                        window.location.href = "dashboard.html"; // Redirect to dashboard
+                    } else {
+                        console.log("❌ User data not found in Firestore");
+                        errorMessage.textContent = "User data not found!";
+                        errorMessage.style.display = "block";
+                    }
+                } catch (error) {
+                    console.error("❌ Login error:", error);
+                    errorMessage.textContent = error.message;
+                    errorMessage.style.display = "block";
+                }
+            });
+        });
+    </script>
+
+    <style>
+        /* General Page Styling */
+        body {
+            font-family: "Poppins", sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 350px;
+            color: white;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 26px;
+            color: #ffffff;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #ccc;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 14px;
+        }
+
+        input:focus {
+            outline: none;
+            border: 2px solid #00aaff;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 12px;
+            background: #00aaff;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .login-button:hover {
+            background: #0088cc;
+        }
+
+        .forgot-password {
+            display: block;
+            margin-top: 10px;
+            color: #00aaff;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        .signup-link {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .signup-link a {
+            color: #00aaff;
+            text-decoration: none;
+        }
+
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+
+        #error-message {
+            color: #ff4d4d;
+            margin-top: 10px;
+            display: none;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <h1>Welcome Back</h1>
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+            <button type="submit" class="login-button">Login</button>
+            <a href="#" class="forgot-password">Forgot Password?</a>
+            <p id="error-message"></p>
+        </form>
+        <div class="signup-link">
+            Don't have an account? <a href="register.html">Sign Up</a>
+        </div>
+    </div>
+
+</body>
+</html>

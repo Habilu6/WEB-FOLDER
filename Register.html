@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - HABILU</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .signup-container {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        h1 { margin-bottom: 1.5rem; color: #2575fc; }
+        .input-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+        .input-group label { font-weight: bold; }
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        .signup-button {
+            width: 100%;
+            padding: 10px;
+            background: #2575fc;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        .signup-button:hover { background: #1a5bbf; }
+        .login-link { margin-top: 15px; font-size: 0.9rem; }
+        .login-link a { color: #2575fc; text-decoration: none; }
+        .login-link a:hover { text-decoration: underline; }
+        .error-message {
+            color: red;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="signup-container">
+        <h1>Create an Account</h1>
+        <form id="signupForm">
+            <div class="input-group">
+                <label for="fullname">Full Name</label>
+                <input type="text" id="fullname" required>
+            </div>
+            <div class="input-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required>
+            </div>
+            <div class="input-group">
+                <label for="confirm-password">Confirm Password</label>
+                <input type="password" id="confirm-password" required>
+            </div>
+            <p id="error-message" class="error-message"></p>
+            <button type="submit" id="signupBtn" class="signup-button">Sign Up</button>
+        </form>
+        <div class="login-link">
+            Already have an account? <a href="login.html">Login</a>
+        </div>
+    </div>
+
+    <script>
+        // Firebase Configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyDGPnRivXIuM4mWuD0e15hT8C2wmL67UZA",
+            authDomain: "money-dashboard-20fe9.firebaseapp.com",
+            databaseURL: "https://money-dashboard-20fe9-default-rtdb.firebaseio.com",
+            projectId: "money-dashboard-20fe9",
+            storageBucket: "money-dashboard-20fe9.appspot.com",
+            messagingSenderId: "100351912935",
+            appId: "1:100351912935:web:12894e122251248aad2b42",
+            measurementId: "G-LJZK84HT9P"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        var auth = firebase.auth();
+        var database = firebase.database();
+
+        document.getElementById("signupForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            var fullname = document.getElementById("fullname").value;
+            var email = document.getElementById("email").value;
+            var password = document.getElementById("password").value;
+            var confirmPassword = document.getElementById("confirm-password").value;
+            var errorMessage = document.getElementById("error-message");
+            var signupBtn = document.getElementById("signupBtn");
+
+            errorMessage.style.display = "none";
+            signupBtn.disabled = true;
+            signupBtn.textContent = "Creating Account...";
+
+            if (password !== confirmPassword) {
+                errorMessage.textContent = "Passwords do not match!";
+                errorMessage.style.display = "block";
+                signupBtn.disabled = false;
+                signupBtn.textContent = "Sign Up";
+                return;
+            }
+
+            auth.createUserWithEmailAndPassword(email, password)
+                .then(userCredential => {
+                    var user = userCredential.user;
+                    return database.ref('users/' + user.uid).set({
+                        fullName: fullname,
+                        email: email,
+                        balance: 0.00,
+                        referrals: 0
+                    });
+                })
+                .then(() => {
+                    alert("Account created successfully!");
+                    window.location.href = "dashboard.html";
+                })
+                .catch(error => {
+                    errorMessage.textContent = error.message;
+                    errorMessage.style.display = "block";
+                    signupBtn.disabled = false;
+                    signupBtn.textContent = "Sign Up";
+                });
+        });
+    </script>
+
+</body>
+</html>
