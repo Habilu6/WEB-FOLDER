@@ -1,0 +1,19 @@
+# Ignore system files
+*.log
+*.dat
+.DS_Store
+Thumbs.db
+
+# Ignore node modules
+node_modules/
+
+# Ignore IDE files
+.vscode/
+.idea/
+
+# Ignore OS files
+AppData/
+OneDrive/
+Desktop/
+
+# Add any other irrelevant directories here

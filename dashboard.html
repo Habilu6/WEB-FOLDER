@@ -1,235 +1,259 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-	<meta charset="UTF-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>Dashboard</title>
-	<style>
-	    * {
-	      box-sizing: border-box;
-	      margin: 0;
-	      padding: 0;
-	    }
-	    body {
-	      font-family: Arial, sans-serif;
-	      background: #f2f2f2;
-	      overflow-x: hidden;
-	    }
-	    .sidebar {
-	      position: fixed;
-	      top: 0;
-	      left: -250px;
-	      width: 250px;
-	      height: 100vh;
-	      background: #3498db;
-	      color: white;
-	      padding: 20px;
-	      display: flex;
-	      flex-direction: column;
-	      justify-content: space-between;
-	      transition: left 0.3s ease;
-	      z-index: 1000;
-	    }
-	    .sidebar.show {
-	      left: 0;
-	    }
-	    .sidebar h2 {
-	      text-align: center;
-	      margin-bottom: 20px;
-	    }
-	    .sidebar .menu-options {
-	      flex-grow: 1;
-	    }
-	    .sidebar button {
-	      background: transparent;
-	      border: none;
-	      color: white;
-	      padding: 10px;
-	      text-align: left;
-	      cursor: pointer;
-	      font-size: 16px;
-	      width: 100%;
-	      margin-bottom: 10px;
-	    }
-	    .sidebar button:hover {
-	      background: rgba(255, 255, 255, 0.2);
-	    }
-	    .logout-btn {
-	      background: #e74c3c;
-	      border: none;
-	      border-radius: 5px;
-	      padding: 10px;
-	      font-size: 16px;
-	      cursor: pointer;
-	      width: 100%;
-	      margin-top: 20px;
-	    }
-	    .logout-btn:hover {
-	      background: #c0392b;
-	    }
-	    .main {
-	      margin-left: 0;
-	      padding: 20px;
-	      transition: margin-left 0.3s ease;
-	    }
-	    .main h1 {
-	      margin-bottom: 20px;
-	    }
-	    .balance {
-	      font-size: 22px;
-	      font-weight: bold;
-	      margin-bottom: 20px;
-	    }
-	    .tab-content {
-	      display: none;
-	      background: white;
-	      padding: 20px;
-	      border-radius: 10px;
-	      margin-bottom: 20px;
-	      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-	    }
-	    .tab-content h2 {
-	      margin-bottom: 10px;
-	    }
-	    .btn {
-	      background: #2ecc71;
-	      color: white;
-	      border: none;
-	      padding: 10px;
-	      width: 100%;
-	      border-radius: 5px;
-	      cursor: pointer;
-	      font-size: 16px;
-	      margin-top: 10px;
-	    }
-	    .btn:hover {
-	      background: #27ae60;
-	    }
-	    input {
-	      width: 100%;
-	      padding: 10px;
-	      margin: 5px 0 10px 0;
-	      border: 1px solid #ccc;
-	      border-radius: 5px;
-	      font-size: 16px;
-	    }
-	    .menu-btn {
-	      position: fixed;
-	      bottom: 20px;
-	      left: 20px;
-	      background: #3498db;
-	      color: white;
-	      border: none;
-	      border-radius: 50%;
-	      width: 60px;
-	      height: 60px;
-	      font-size: 24px;
-	      cursor: pointer;
-	      z-index: 1100;
-	    }
-	</style>
-  </head>
-  <body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Money Dashboard (TZS)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        body {
+            background: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            margin: auto;
+        }
+        h2 {
+            color: #333;
+        }
+        .balance {
+            background: #28a745;
+            color: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 20px;
+            margin: 10px 0;
+        }
+        input, button, select {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        input {
+            background: #f9f9f9;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            border: none;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .withdraw {
+            background: #dc3545;
+        }
+        .withdraw:hover {
+            background: #a71d2a;
+        }
+        .logout {
+            background: #6c757d;
+        }
+        .logout:hover {
+            background: #4e555b;
+        }
+        .referral-table {
+            margin-top: 20px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .referral-table th, .referral-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .referral-table th {
+            background-color: #f2f2f2;
+        }
+        select {
+            background-color: #f9f9f9;
+        }
+        select option {
+            padding: 10px;
+        }
+        select:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+    </style>
+</head>
+<body>
 
-	<div class="sidebar" id="sidebar">
-	  <div>
-		<h2>Menu</h2>
-		<div class="menu-options">
-		  <button onclick="showSection('add-money')">Add Money</button>
-		  <button onclick="showSection('withdraw')">Withdraw Request</button>
-		  <button onclick="showSection('referrals')">Referrals</button>
-		  <button onclick="showSection('history')">Withdrawal History</button>
-		</div>
-	  </div>
-	  <button class="logout-btn" onclick="logoutUser()">Logout</button>
-	</div>
+    <h2>Money Dashboard (TZS)</h2>
+    <div class="container">
+        <h3>Welcome, <span id="user-email"></span></h3>
 
-	<div class="main">
-	  <h1>Welcome to Your Money Dashboard</h1>
-	  <div class="balance">Total Balance: <span id="balance">TZS 0</span></div>
+        <div class="balance">Balance: TZS <span id="balance">0.00</span></div>
 
-	  <div id="add-money" class="tab-content">
-		<h2>Add Money</h2>
-		<input type="number" id="depositAmount" placeholder="Enter amount (TZS)">
-		<button class="btn" onclick="addMoney()">Add</button>
-	  </div>
+        <h4>Deposit Money</h4>
+        <input type="number" id="deposit-amount" placeholder="Enter amount in TZS">
+        
+        <h4>Select Payment Method</h4>
+        <select id="payment-method">
+            <option value="airtel">Airtel Money</option>
+            <option value="halopesa">Halopesa</option>
+            <option value="yas-mix">Yas Mix</option>
+            <option value="mpesa">M-Pesa</option>
+        </select>
+        
+        <button onclick="depositMoney()">Deposit</button>
 
-	  <div id="withdraw" class="tab-content">
-		<h2>Withdraw Request</h2>
-		<input type="number" id="withdrawAmount" placeholder="Enter amount (TZS)">
-		<button class="btn" onclick="requestWithdrawal()">Request</button>
-	  </div>
+        <h4>Withdraw Money</h4>
+        <input type="number" id="withdraw-amount" placeholder="Enter amount in TZS">
+        <button class="withdraw" onclick="withdrawMoney()">Request Withdrawal</button>
 
-	  <div id="referrals" class="tab-content">
-		<h2>Your Referrals</h2>
-		<input type="text" id="referralLink" value="https://yourwebsite.com/register?ref=12345" readonly>
-		<button class="btn" onclick="copyReferral()">Copy</button>
-	  </div>
+        <h4>Referrals: <span id="referral-count">0</span></h4>
+        
+        <h4>Your Referral Link:</h4>
+        <input type="text" id="referral-link" readonly>
 
-	  <div id="history" class="tab-content">
-		<h2>Withdrawal History</h2>
-		<ul id="withdrawHistory"></ul>
-	  </div>
-	</div>
+        <h4>Referral List</h4>
+        <table class="referral-table">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Phone Number</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="referral-list"></tbody>
+        </table>
 
-	<button class="menu-btn" onclick="toggleSidebar()">&#9776;</button>
+        <button class="logout" onclick="logout()">Logout</button>
+    </div>
 
-	<script>
-	    function updateBalance() {
-	      document.getElementById("balance").innerText = "TZS " + (localStorage.getItem("balance") || 0);
-	    }
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
 
-	    function showSection(sectionId) {
-	      document.querySelectorAll('.tab-content').forEach(section => section.style.display = 'none');
-	      document.getElementById(sectionId).style.display = 'block';
-	    }
+    <script>
+        // Firebase Config (Replace with your credentials)
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
 
-	    function toggleSidebar() {
-	      document.getElementById('sidebar').classList.toggle('show');
-	    }
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
 
-	    function addMoney() {
-	      let amount = parseFloat(document.getElementById('depositAmount').value);
-	      if (amount < 15000 || amount > 5000000) {
-	        alert("Deposit must be between 15,000 TZS and 5,000,000 TZS.");
-	        return;
-	      }
-	      let balance = parseFloat(localStorage.getItem("balance") || 0);
-	      balance += amount;
-	      localStorage.setItem("balance", balance);
-	      updateBalance();
-	      alert("Money added successfully!");
-	    }
+        let userId = null;
 
-	    function requestWithdrawal() {
-	      let amount = parseFloat(document.getElementById('withdrawAmount').value);
-	      let balance = parseFloat(localStorage.getItem("balance") || 0);
-	      if (amount > balance) {
-	        alert("Insufficient balance!");
-	        return;
-	      }
-	      balance -= amount;
-	      localStorage.setItem("balance", balance);
-	      updateBalance();
-	      document.getElementById('withdrawHistory').innerHTML += <li>Withdrawal request of TZS ${amount} sent.</li>;
-	      alert("Withdrawal request sent successfully!");
-	    }
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                userId = user.uid;
+                document.getElementById("user-email").textContent = user.email;
+                loadUserData();
+            } else {
+                window.location.href = "login.html";  // Redirect if not logged in
+            }
+        });
 
-	    function copyReferral() {
-	      let copyText = document.getElementById("referralLink");
-	      copyText.select();
-	      document.execCommand("copy");
-	      alert("Referral link copied!");
-	    }
+        function depositMoney() {
+            let amount = parseFloat(document.getElementById("deposit-amount").value);
+            let paymentMethod = document.getElementById("payment-method").value;
+            if (amount >= 15000 && amount <= 5000000) {
+                db.collection("users").doc(userId).update({
+                    balance: firebase.firestore.FieldValue.increment(amount)
+                });
+                alert(Deposit of ${amount} TZS via ${paymentMethod} successful!);
+                loadUserData();
+            } else {
+                alert("Deposit amount must be between 15,000 TZS and 5,000,000 TZS.");
+            }
+        }
 
-	    function logoutUser() {
-	      localStorage.clear();
-	      alert("You have been logged out successfully!");
-	      window.location.href = "login.html";
-	    }
+        function withdrawMoney() {
+            let amount = parseFloat(document.getElementById("withdraw-amount").value);
+            if (amount > 0) {
+                db.collection("withdrawals").add({
+                    userId: userId,
+                    amount: amount,
+                    status: "pending",
+                    date: new Date()
+                });
+                alert("Withdrawal request sent!");
+            } else {
+                alert("Enter a valid amount");
+            }
+        }
 
-	    updateBalance();
-	</script>
+        function loadUserData() {
+            db.collection("users").doc(userId).get().then(doc => {
+                if (doc.exists) {
+                    let data = doc.data();
+                    document.getElementById("balance").textContent = data.balance.toLocaleString() + " TZS";
+                    document.getElementById("referral-count").textContent = data.referrals || 0;
+                    document.getElementById("referral-link").value = window.location.origin + "/signup.html?ref=" + userId;
+                    loadReferralList();
+                }
+            });
+        }
 
-  </body>
+        function loadReferralList() {
+            db.collection("users").where("referredBy", "==", userId).get().then(snapshot => {
+                let referralList = document.getElementById("referral-list");
+                referralList.innerHTML = "";  // Clear previous list
+                snapshot.forEach(doc => {
+                    let data = doc.data();
+                    let row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${data.username}</td>
+                        <td>${data.phone}</td>
+                        <td>${data.status}</td>
+                    `;
+                    referralList.appendChild(row);
+                });
+            });
+        }
+
+        function logout() {
+            auth.signOut().then(() => {
+                window.location.href = "login.html";
+            });
+        }
+
+        // Daily Interest Update (1% Increase)
+        function updateInterest() {
+            db.collection("users").get().then(snapshot => {
+                snapshot.forEach(doc => {
+                    let data = doc.data();
+                    let newBalance = data.balance * 1.01;
+                    db.collection("users").doc(doc.id).update({ balance: newBalance });
+                });
+            });
+        }
+
+        // Referral Bonus: 50% of referred user's deposit
+        function addReferralBonus(referralUserId, depositAmount) {
+            let bonus = depositAmount * 0.5; // 50% of the referral's deposit
+            db.collection("users").doc(referralUserId).update({
+                balance: firebase.firestore.FieldValue.increment(bonus)
+            });
+        }
+    </script>
+
+</body>
 </html>
