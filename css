@@ -1,0 +1,57 @@
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to bottom, #0f2027, #203a43);
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+
+.container {
+    background: #1a2b3c;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 300px;
+    margin: auto;
+}
+
+.phone {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.phone span {
+    background: green;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    border: none;
+}
+
+.captcha-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: none;
+    cursor: pointer;
+}
+
+.register {
+    background: yellow;
+}
+
+.login {
+    background: lightgoldenrodyellow;
+}
